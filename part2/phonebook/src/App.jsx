@@ -37,11 +37,20 @@ const App = (props) => {
     }
 
     // Check if the name is already in the list.
-    const nameExists = (
-      persons.some(person => person.name === newName)
-    )
+    const nameExists = (persons.some(person => person.name === newName))
     if (nameExists){
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook. Update with new number?`)) {
+
+        const personToUpdate = persons.find(persons => persons.name == newName)
+
+        const updatedPerson = {...personToUpdate, number: newNumber}
+        
+        phoneService
+          .update(updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id !== personToUpdate.id ? p : returnedPerson))
+          })
+      }
       return
     }
     // Add the value to the persons array, which is also portrayed,

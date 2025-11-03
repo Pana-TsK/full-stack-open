@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "id": "7238",
-      "name": "example next",
-      "number": "+44 44 44"
-    },
-    {
       "id": "75db",
       "name": "example_4",
       "number": "+99 99 99 "
