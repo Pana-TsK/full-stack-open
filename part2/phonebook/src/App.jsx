@@ -3,23 +3,27 @@ import { useState, useEffect } from 'react'
 import Filter from './components/filter'
 import Form from './components/form'
 import Phonebook from './components/phonebook'
+import Notification from './components/notification'
+
 import phoneService from './services/phone_numbers'
+
 
 const App = (props) => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [matchString, setMatchString] = useState('')
+  const [message, setMessage] = useState(null)
 
   // handle the fetching of data from the server
   useEffect(() => {
     console.log("useEffect is being called")
     phoneService
     .getAll()
-    .then(response => {
+    .then(personEntry => {
         console.log("promise fulfilled")
-        setPersons(response)
-        console.log("reponse has been gathered:", response)
+        setPersons(personEntry)
+        console.log("reponse has been gathered:", personEntry)
       })
   }, [])
 
@@ -53,11 +57,8 @@ const App = (props) => {
       }
       return
     }
-    // Add the value to the persons array, which is also portrayed,
-    // and reset the values of the hooks.
-  
-    
-    // add this new person also to the server
+
+    // Handle adding person
     phoneService
       .create(personObject)
       .then(returnedNote => {        
@@ -65,6 +66,11 @@ const App = (props) => {
         console.log("called setPersons setter succesfully")
         setNewName('')
         setNewNumber('')
+      })
+      .then(success => {
+        setMessage(`Added '${personObject.name}' to the phonebook.`)
+        setTimeout(() => setMessage(null), 5000)
+        
       })
   }
 
@@ -101,6 +107,8 @@ const App = (props) => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={message} />
+
       <Filter matchString={matchString}
               handleStringMatching = {handleStringMatching}
               />
