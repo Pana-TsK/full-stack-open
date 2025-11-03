@@ -1,20 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Filter from './components/filter'
 import Form from './components/form'
 import Phonebook from './components/phonebook'
+import axios from 'axios'
 
-const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
-
+const App = (props) => {
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-
   const [matchString, setMatchString] = useState('')
+
+  // handle the fetching of data from the server
+  useEffect(() => {
+    console.log("useEffect is being called")
+    axios
+      .get("http://localhost:3001/persons")
+      .then(response => {
+        console.log("promise fulfilled")
+        setPersons(response.data)
+      })
+  }, [])
 
   // Handle the filtering of the data, in case there the filter is being applied
   const personsToShow = matchString == "" ? persons : persons.filter(person => person.name.includes(matchString))
