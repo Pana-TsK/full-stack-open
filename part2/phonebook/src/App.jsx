@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
+
 import Filter from './components/filter'
 import Form from './components/form'
 import Phonebook from './components/phonebook'
-import axios from 'axios'
+import phoneService from './services/phone_numbers'
 
 const App = (props) => {
   const [persons, setPersons] = useState([])
@@ -13,11 +14,11 @@ const App = (props) => {
   // handle the fetching of data from the server
   useEffect(() => {
     console.log("useEffect is being called")
-    axios
-      .get("http://localhost:3001/persons")
+    phoneService.getAll()
       .then(response => {
         console.log("promise fulfilled")
-        setPersons(response.data)
+        setPersons(response)
+        console.log("reponse has been gathered:", response)
       })
   }, [])
 
@@ -30,7 +31,6 @@ const App = (props) => {
     event.preventDefault()
     
     // Specify the data of the person to be added
-
     const personObject = {
       name: newName,
       number: newNumber,
@@ -53,11 +53,12 @@ const App = (props) => {
     setNewNumber('')
     
     // add this new person also to the server
-    axios
-      .post('http://localhost:3001/persons')
-      .then(response => 
-        console.log(response)
-      )
+    phoneService
+      .create(personObject)
+      .then(returnedNote => {        
+        setPersons(persons.concat(returnedNote))
+        console.log("called setPersons setter succesfully")
+      })
   }
 
   // Handle the event of writing more text
