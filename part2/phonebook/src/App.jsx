@@ -38,23 +38,26 @@ const App = (props) => {
     }
 
     // Check if the name is already in the list.
-
     const nameExists = (
       persons.some(person => person.name === newName)
     )
-
     if (nameExists){
       alert(`${newName} is already added to phonebook`)
       return
     }
-
     // Add the value to the persons array, which is also portrayed,
     // and reset the values of the hooks.
-
     setPersons(persons.concat(personObject))
     
     setNewName('')
     setNewNumber('')
+    
+    // add this new person also to the server
+    axios
+      .post('http://localhost:3001/persons')
+      .then(response => 
+        console.log(response)
+      )
   }
 
   // Handle the event of writing more text
