@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+const morgan  = require('morgan')
+
 let persons = [
     { 
       "id": "1",
@@ -53,9 +55,11 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-// POST requests
+//middleware
 app.use(express.json())
+app.use(morgan('tiny'))
 
+// POST requests
 const getRandomId = () => {
     return Math.floor(Math.random() * 1000000000)
 }
