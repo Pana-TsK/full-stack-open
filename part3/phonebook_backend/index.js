@@ -64,6 +64,19 @@ app.post('/api/persons/', (request, response) => {
     const person = request.body
     const id = getRandomId()
     
+    if (!person.name || !person.number) {
+        console.log("name or numer field is not filled!")
+        return response.status(400).json({
+            'error': 'content is missing'
+        })
+    }
+
+    if (persons.filter(persons => persons.name == person.name).length !== 0) {
+        console.log("the person name is already in the phonebook!")
+        return response.status(400).json({
+            'error': 'name is already in the file.'
+        })
+    }
 
     person.id = id
     persons = persons.concat(person)
