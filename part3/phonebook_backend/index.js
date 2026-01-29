@@ -1,23 +1,24 @@
 require('dotenv').config()
 const phoneNumber = require('./models/phonenumber')
+const cors = require('cors')
 
 const express = require('express')
 const app = express()
 
-const cors = require('cors')
 const morgan  = require('morgan')
 
 app.use(cors())
 
 // GET requests
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
     phoneNumber.find({}).then(persons => {
         response.json(persons)
     })
+    .catch(error => { next(error) })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
     phoneNumber.findById(id).then(person => {
          if (person) {
@@ -26,20 +27,23 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
         }
     })
+    .catch(error => { next(error) })
 })
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
     phoneNumber.find({}).then(persons => {
         response.send(`<p>Phonebook has info for ${persons.length} people.</p>\n${Date()}</p>`)
     })
+    .catch(error => { next(error) })
 })
 
 // DELETE requests
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
-    persons = persons.filter(persons => persons.id !== id)
-
-    response.status(204).end()
+    phoneNumber.findByIdAndDelete(id).then(result => {
+        response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 //middleware
@@ -56,7 +60,7 @@ app.use(morgan(
 ))
 
 // POST requests
-app.post('/api/persons/', (request, response) => {
+app.post('/api/persons/', (request, response, next) => {
 
     console.log("grabbing request body")
     const body = request.body
@@ -74,6 +78,7 @@ app.post('/api/persons/', (request, response) => {
         response.json(result)
         console.log(`added ${body.name} number ${body.number} to notebook`)
     })
+    .catch(error => { next(error) })
 })
 
 const PORT = process.env.PORT || 3001
