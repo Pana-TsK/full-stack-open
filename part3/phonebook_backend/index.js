@@ -7,11 +7,7 @@ const app = express()
 const cors = require('cors')
 const morgan  = require('morgan')
 
-
-
 app.use(cors())
-
-let phoneNumbers = {}
 
 // GET requests
 
@@ -23,17 +19,19 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
-    person = persons.find(person => person.id === id)
-
-    if (person) {
+    phoneNumber.findById(id).then(person => {
+         if (person) {
         response.json(person)
-    } else {
+        } else {
         response.status(404).end()
-    }
+        }
+    })
 })
 
 app.get('/info', (request, response) => {
-    response.send(`<p>Phonebook has info for ${persons.length} people.</p>\n${Date()}`)
+    phoneNumber.find({}).then(persons => {
+        response.send(`<p>Phonebook has info for ${persons.length} people.</p>\n${Date()}</p>`)
+    })
 })
 
 // DELETE requests
@@ -58,33 +56,24 @@ app.use(morgan(
 ))
 
 // POST requests
-const getRandomId = () => {
-    return Math.floor(Math.random() * 1000000000)
-}
-
 app.post('/api/persons/', (request, response) => {
-    const person = request.body
-    const id = getRandomId()
-    
-    if (!person.name || !person.number) {
-        console.log("name or numer field is not filled!")
-        return response.status(400).json({
-            'error': 'content is missing'
-        })
+
+    console.log("grabbing request body")
+    const body = request.body
+
+    if (!body.name || !body.number) {
+        return response.status(400).json({ error: 'content missing' })
     }
 
-    if (persons.filter(persons => persons.name == person.name).length !== 0) {
-        console.log("the person name is already in the phonebook!")
-        return response.status(400).json({
-            'error': 'name is already in the file.'
-        })
-    }
+    const entry = new phoneNumber({
+        name: body.name,
+        number: body.number
+    })
 
-    person.id = id
-    persons = persons.concat(person)
-
-    console.log(person) // console check for info
-    response.json(persons)
+    entry.save().then(result => {
+        response.json(result)
+        console.log(`added ${body.name} number ${body.number} to notebook`)
+    })
 })
 
 const PORT = process.env.PORT || 3001

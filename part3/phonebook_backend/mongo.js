@@ -38,7 +38,7 @@ if (process.argv.length == 3) {
 
     phoneNumber.find({}).then(result => {
         result.forEach(line => {
-            console.log(`${line.name} ${line.number}`)
+            console.log(`${line.name} ${line}`)
         })
         mongoose.connection.close()
         process.exit()
