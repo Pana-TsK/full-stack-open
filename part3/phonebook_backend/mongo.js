@@ -27,7 +27,7 @@ const entry = new phoneNumber({
 
 if (process.argv.length > 3) {
 
-    entry.save().then(result => {
+    entry.save().then( () => {
         console.log(`added ${input_name} number ${input_num} to notebook`)
         mongoose.connection.close
         process.exit()

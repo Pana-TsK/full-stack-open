@@ -40,7 +40,7 @@ app.get('/info', (request, response, next) => {
 // DELETE requests
 app.delete('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
-    phoneNumber.findByIdAndDelete(id).then(result => {
+    phoneNumber.findByIdAndDelete(id).then( () => {
         response.status(204).end()
     })
     .catch(error => next(error))
@@ -105,4 +105,4 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
-app.listen(PORT, '0.0.0.0')
+app.listen(PORT, '0.0.0.0:8080')
