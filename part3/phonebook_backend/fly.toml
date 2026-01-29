@@ -1,18 +1,15 @@
-# fly.toml app configuration file generated for phonebook-backend-aged-grass-7692 on 2025-11-26T12:30:55+01:00
+# fly.toml app configuration file generated for full-stack-open-byl58a on 2026-01-29T17:04:11Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'phonebook-backend-aged-grass-7692'
+app = 'full-stack-open-byl58a'
 primary_region = 'ams'
 
 [build]
 
-[env]
-  PORT = "3001"
-
 [http_service]
-  internal_port = 3001
+  internal_port = 8080
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
@@ -23,3 +20,4 @@ primary_region = 'ams'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 256
