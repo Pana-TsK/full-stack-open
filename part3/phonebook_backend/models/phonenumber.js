@@ -3,10 +3,14 @@ require('dotenv').config()
 
 mongoose.set('strictQuery', false)
 
-const url = process.env.MONGODB_URI
+const uri = process.env.MONGODB_URI
+if (!uri || uri === 'undefined') {
+  console.error('MONGODB_URI is not a valid string.')
+  process.exit(1)
+}
 
-console.log("connecting to", url)
-mongoose.connect(url, { family : 4})
+console.log("connecting to", uri)
+mongoose.connect(uri, { family : 4})
     .then( () => {
         console.log("connected to mongoDB.")
     })

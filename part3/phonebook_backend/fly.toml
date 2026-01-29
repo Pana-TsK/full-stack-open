@@ -7,6 +7,7 @@ app = 'full-stack-open-byl58a'
 primary_region = 'ams'
 
 [build]
+  PORT = "3001"
 
 [http_service]
   internal_port = 3001

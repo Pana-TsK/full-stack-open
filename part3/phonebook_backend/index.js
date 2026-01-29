@@ -1,4 +1,4 @@
-require('dotenv').config()
+
 const phoneNumber = require('./models/phonenumber')
 const cors = require('cors')
 
@@ -8,6 +8,10 @@ const app = express()
 const morgan  = require('morgan')
 
 app.use(cors())
+
+app.use(morgan(
+    ':method :url :status :res[content-length] - :response-time ms :body'
+))
 
 // GET requests
 
@@ -55,10 +59,6 @@ morgan.token('body', req => {
   return JSON.stringify(req.body)
 })
 
-app.use(morgan(
-    ':method :url :status :res[content-length] - :response-time ms :body'
-))
-
 // POST requests
 app.post('/api/persons/', (request, response, next) => {
 
@@ -99,7 +99,6 @@ app.put('/api/persons/:id', (req, res, next) => {
     })
     .catch(error => next(error))
 })
-
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, '0.0.0.0', () => {
